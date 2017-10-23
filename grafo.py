@@ -1,5 +1,5 @@
 import random
-
+from time import sleep
 class Grafo():
 	
 	def __init__(self):
@@ -40,12 +40,53 @@ class Grafo():
 	def grau(self, vertice):
 		return vertice.grau()
 
+	def ordenacao_topologica(self):
+		s = self.sumidouros()
+		l = []
+
+		def visita(vertice):
+			if not vertice.visitado:
+				vertice.visitado = True
+				for v in vertice.antecessores:
+					visita(v)
+				l.append(vertice)
+
+		for sumidouro in s:
+			visita(sumidouro)
+
+		self.limpa_vertices()
+
+		return l
+
+	def planejamento(self):
+		pass
+
+	def verifica_disciplinas(self):
+		for v in self.vertices:
+			if v.cursada == False and v.visitado == False:
+				return True
+		return False
+
+	def limpa_vertices(self):
+		for v in self.vertices:
+			v.visitado = False
+
+	def sumidouros(self):
+		s = set()
+		for v in self.vertices:
+			if len(v.sucessores) == 0:
+				s.add(v)
+		return s
+
 class Vertice():
 	
-	def __init__(self, rotulo):
+	def __init__(self, rotulo, carga_horaria, cursada=False):
 		self.rotulo = rotulo
 		self.antecessores = set()
 		self.sucessores = set()
+		self.visitado = False
+		self.carga_horaria = carga_horaria
+		self.cursada = cursada
 
 	def adiciona_antecessor(self, vertice):
 		self.antecessores.add(vertice)
@@ -74,53 +115,53 @@ class Vertice():
 def main():
 	g = Grafo()
 	# primeira fase
-	v1 = Vertice("INE5402")
-	v2 = Vertice("MTM5161")
-	v3 = Vertice("INE5403")
-	v4 = Vertice("EEL5105")
-	v5 = Vertice("INE5401")
+	v1 = Vertice("INE5402",6,True)
+	v2 = Vertice("MTM5161",4,True)
+	v3 = Vertice("INE5403",6,True)
+	v4 = Vertice("EEL5105",5,True)
+	v5 = Vertice("INE5401",2,True)
 	# segunda fase
-	v6 = Vertice("INE5404")
-	v7 = Vertice("MTM7174")
-	v8 = Vertice("INE5405")
-	v9 = Vertice("MTM5512")
-	v10 = Vertice("INE5406")
-	v11 = Vertice("INE5407")
+	v6 = Vertice("INE5404",6,True)
+	v7 = Vertice("MTM7174",4,True)
+	v8 = Vertice("INE5405",5,True)
+	v9 = Vertice("MTM5512",4,True)
+	v10 = Vertice("INE5406",5,True)
+	v11 = Vertice("INE5407",3,True)
 	# terceira fase
-	v12 = Vertice("INE5408")
-	v13 = Vertice("INE5410")
-	v14 = Vertice("INE5409")
-	v15 = Vertice("MTM5245")
-	v16 = Vertice("INE5411")
+	v12 = Vertice("INE5408",6,True)
+	v13 = Vertice("INE5410",4,True)
+	v14 = Vertice("INE5409",4,True)
+	v15 = Vertice("MTM5245",4,True)
+	v16 = Vertice("INE5411",6,True)
 	# quarta fase
-	v17 = Vertice("INE5417")
-	v18 = Vertice("INE5413")
-	v19 = Vertice("INE5415")
-	v20 = Vertice("INE5416")
-	v21 = Vertice("INE5412")
-	v22 = Vertice("INE5414")
+	v17 = Vertice("INE5417",5,True)
+	v18 = Vertice("INE5413",4,True)
+	v19 = Vertice("INE5415",4,True)
+	v20 = Vertice("INE5416",5,True)
+	v21 = Vertice("INE5412",4,True)
+	v22 = Vertice("INE5414",4,True)
 	# quinta fase
-	v23 = Vertice("INE5419")
-	v24 = Vertice("INE5423")
-	v25 = Vertice("INE5420")
-	v26 = Vertice("INE5421")
-	v27 = Vertice("INE5418")
-	v28 = Vertice("INE5422")
+	v23 = Vertice("INE5419",4)
+	v24 = Vertice("INE5423",4)
+	v25 = Vertice("INE5420",4)
+	v26 = Vertice("INE5421",4)
+	v27 = Vertice("INE5418",4)
+	v28 = Vertice("INE5422",4)
 	# sexta fase
-	v29 = Vertice("INE5427")
-	v30 = Vertice("INE5453")
-	v31 = Vertice("INE5425")
-	v32 = Vertice("INE5430")
-	v33 = Vertice("INE5426")
-	v34 = Vertice("INE5424")
+	v29 = Vertice("INE5427",4)
+	v30 = Vertice("INE5453",4)
+	v31 = Vertice("INE5425",4)
+	v32 = Vertice("INE5430",4)
+	v33 = Vertice("INE5426",4)
+	v34 = Vertice("INE5424",4)
 	# setima fase
-	v35 = Vertice("INE5433")
-	v36 = Vertice("INE5432")
-	v37 = Vertice("INE5429")
-	v38 = Vertice("INE5431")
-	v39 = Vertice("INE5428")
+	v35 = Vertice("INE5433",6)
+	v36 = Vertice("INE5432",4)
+	v37 = Vertice("INE5429",4)
+	v38 = Vertice("INE5431",4)
+	v39 = Vertice("INE5428",4)
 	# oitava fase
-	v40 = Vertice("INE5434")
+	v40 = Vertice("INE5434",6)
 
 	g.add_vertice(v1)
 	g.add_vertice(v2)
@@ -233,8 +274,7 @@ def main():
 
 	g.conecta(v35,v40)
 
-	g.rem_vertice(v12)
-
+	print(g.ordenacao_topologica())
 	
 if __name__ == "__main__":
 	main()
