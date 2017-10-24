@@ -59,13 +59,21 @@ class Grafo():
 		return l
 
 	def planejamento(self):
-		pass
-
-	def verifica_disciplinas(self):
-		for v in self.vertices:
-			if v.cursada == False and v.visitado == False:
-				return True
-		return False
+		carga_horaria_semestre = 30
+		plano = []
+		semestre = []
+		while self.existe_materias_cursaveis():
+			for v in self.vertices:
+				if not v.cursada and v.pode_ser_cursada():
+					if carga_horaria_semestre >= v.carga_horaria:
+						carga_horaria_semestre -= v.carga_horaria
+						semestre.append(v)
+			plano.append(semestre)
+			for i in semestre:
+				i.cursada = True
+			semestre = []
+			carga_horaria_semestre = 30
+		return plano	
 
 	def limpa_vertices(self):
 		for v in self.vertices:
@@ -77,6 +85,19 @@ class Grafo():
 			if len(v.sucessores) == 0:
 				s.add(v)
 		return s
+
+	def fontes(self):
+		s = set()
+		for v in self.vertices:
+			if len(v.antecessores) == 0:
+				s.add(v)
+		return s
+
+	def existe_materias_cursaveis(self):
+		for v in self.vertices:
+			if not v.cursada:
+				return True
+		return False
 
 class Vertice():
 	
@@ -105,6 +126,12 @@ class Vertice():
 
 	def grau(self):
 		return len(self.adjacentes())
+
+	def pode_ser_cursada(self):
+		for v in self.antecessores:
+			if not v.cursada:
+				return False
+		return True
 
 	def __str__(self):
 		return self.rotulo
@@ -274,7 +301,7 @@ def main():
 
 	g.conecta(v35,v40)
 
-	print(g.ordenacao_topologica())
-	
+	print(g.planejamento())
+
 if __name__ == "__main__":
 	main()
