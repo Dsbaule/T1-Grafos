@@ -1,5 +1,5 @@
 import random
-from time import sleep
+
 class Grafo():
 	
 	def __init__(self):
@@ -31,8 +31,9 @@ class Grafo():
 		return self.vertices
 
 	def um_vertice(self):
-		rv = random.sample(self.vertices, 1)
-		return rv[0]
+		v = self.vertices.pop()
+		self.vertices.add(v)
+		return v
 
 	def adjacentes(self, vertice):
 		return vertice.adjacentes()
@@ -101,7 +102,7 @@ class Grafo():
 
 class Vertice():
 	
-	def __init__(self, rotulo, carga_horaria, cursada=False):
+	def __init__(self, rotulo, carga_horaria=None, cursada=False):
 		self.rotulo = rotulo
 		self.antecessores = set()
 		self.sucessores = set()
