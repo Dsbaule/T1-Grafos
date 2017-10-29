@@ -94,7 +94,13 @@ class testGrafo(unittest.TestCase):
 		self.assertEqual(self.v8.antecessores, set([self.v6]))
 
 	def test_ordenacao_topologica(self):
-		pass
+		self.g.rem_vertice(self.v3)
+		self.g.rem_vertice(self.v6)
+		self.g.rem_vertice(self.v9)
+		self.g.conecta(self.v1,self.v2)
+		self.g.conecta(self.v2,self.v4)
+		self.g.conecta(self.v8,self.v7)
+		self.assertIn(self.g.ordenacao_topologica(),[[self.v1,self.v2,self.v4,self.v5,self.v8,self.v7], [self.v1,self.v2,self.v5,self.v8,self.v4,self.v7],[self.v1,self.v2,self.v5,self.v4,self.v8,self.v7]])
 
 	def test_planejamento(self):
 		self.assertEqual(self.g.planejamento(), [set([self.v1, self.v2, self.v3]), set([self.v4, self.v5, self.v6]), set([self.v7, self.v8, self.v9])])
