@@ -50,12 +50,65 @@ class testVertice(unittest.TestCase):
 class testGrafo(unittest.TestCase):
 
 	def setUp(self):
-		pass
+		self.g = grafo.Grafo()
+		self.v1 = grafo.Vertice("A", 6)
+		self.v2 = grafo.Vertice("B", 6)
+		self.v3 = grafo.Vertice("C", 6)
+		self.v4 = grafo.Vertice("D", 6)
+		self.v5 = grafo.Vertice("E", 6)
+		self.v6 = grafo.Vertice("F", 4)
+		self.v7 = grafo.Vertice("G", 4)
+		self.v8 = grafo.Vertice("H", 4)
+		self.v9 = grafo.Vertice("I", 4)
+
+		self.g.add_vertice(self.v1)
+		self.g.add_vertice(self.v2)
+		self.g.add_vertice(self.v3)
+		self.g.add_vertice(self.v4)
+		self.g.add_vertice(self.v5)
+		self.g.add_vertice(self.v6)
+		self.g.add_vertice(self.v7)
+		self.g.add_vertice(self.v8)
+		self.g.add_vertice(self.v9)
+
+		self.g.conecta(self.v1,self.v4)
+		self.g.conecta(self.v1,self.v5)
+		self.g.conecta(self.v2,self.v5)
+		self.g.conecta(self.v3,self.v6)
+		self.g.conecta(self.v4,self.v7)
+		self.g.conecta(self.v5,self.v8)
+		self.g.conecta(self.v6,self.v9)
+		self.g.conecta(self.v6,self.v8)
 
 	def tearDown(self):
 		pass
 
-	
+	def test_rem_vertice(self):
+
+		self.assertEqual(self.v1.sucessores, set([self.v4,self.v5]))
+		self.assertEqual(self.v2.sucessores, set([self.v5]))
+		self.assertEqual(self.v8.antecessores, set([self.v5, self.v6]))
+		self.g.rem_vertice(self.v5)
+		self.assertEqual(self.v1.sucessores, set([self.v4]))
+		self.assertEqual(self.v2.sucessores, set())
+		self.assertEqual(self.v8.antecessores, set([self.v6]))
+
+	def test_ordenacao_topologica(self):
+		pass
+
+	def test_planejamento(self):
+		self.assertEqual(self.g.planejamento(), [set([self.v1, self.v2, self.v3]), set([self.v4, self.v5, self.v6]), set([self.v7, self.v8, self.v9])])
+		self.g.desconecta(self.v4, self.v7)
+		for v in self.g.vertices:
+			v.cursada = False
+
+		self.assertEqual(self.g.planejamento(), [set([self.v1, self.v2, self.v3, self.v7]), set([self.v4, self.v5, self.v6]), set([self.v8, self.v9])])
+		for v in self.g.vertices:
+			v.cursada = False
+
+		self.g.conecta(self.v4, self.v7)
+		self.v6.cursada = True
+		self.assertEqual(self.g.planejamento(), [set([self.v1, self.v2, self.v3, self.v9]), set([self.v4, self.v5]), set([self.v7, self.v8])])
 
 
 if __name__ == "__main__":

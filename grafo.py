@@ -62,17 +62,17 @@ class Grafo():
 	def planejamento(self):
 		carga_horaria_semestre = 30
 		plano = []
-		semestre = []
+		semestre = set()
 		while self.existe_materias_cursaveis():
 			for v in self.vertices:
 				if not v.cursada and v.pode_ser_cursada():
 					if carga_horaria_semestre >= v.carga_horaria:
 						carga_horaria_semestre -= v.carga_horaria
-						semestre.append(v)
+						semestre.add(v)
 			plano.append(semestre)
 			for i in semestre:
 				i.cursada = True
-			semestre = []
+			semestre = set()
 			carga_horaria_semestre = 30
 		return plano	
 
