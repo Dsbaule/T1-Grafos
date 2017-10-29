@@ -2,20 +2,43 @@ import random
 
 class Grafo():
 	
+	"""
+	Construtor.
+	Cria um objeto Grafo com um conjunto de vertices vazio.
+	"""
 	def __init__(self):
 		self.vertices = set()
 
+	"""
+	adiciona vertice
+	recebe como parametro um objeto do tipo vertice e o adiciona no conjunto de 
+	vertices do grafo.
+	"""
 	def add_vertice(self, vertice):
 		self.vertices.add(vertice)
 
+	"""
+	conecta
+	recebe como parametros dois vertices v1 e v2 e os conecta adicionando v2 no
+	conjunto de sucessores de v1 e v1 no conjunto de antecessores de v2.
+	"""
 	def conecta(self, v1, v2):
 		v1.adiciona_sucessor(v2)
 		v2.adiciona_antecessor(v1)
 
+	"""
+	desconecta
+	recebe como parametros dois vertices v1 e v2 e os desconecta removendo v2 do 
+	conjunto de vertices sucessores de v1 e v1 do conjunto antecessores de v2.
+	"""
 	def desconecta(self, v1, v2):
 		v1.remove_sucessor(v2)
 		v2.remove_antecessor(v1)
 
+	"""
+	remove vertice
+	recebe como parametro um vertice e o remove do grafo junto com suas conexoes
+	"""
 	def rem_vertice(self, vertice):
 		for antecessor in vertice.antecessores:
 			antecessor.remove_sucessor(vertice)
@@ -24,23 +47,48 @@ class Grafo():
 
 		self.vertices.remove(vertice)
 
+	"""
+	Ordem
+	retorna a ordem do grafo.
+	"""
 	def ordem(self):
 		return len(self.vertices)
 
+	"""
+	Vertices
+	retorna o conjunto de vertices do grafo.
+	"""
 	def vertices(self):
 		return self.vertices
 
+	"""
+	Um vertice
+	retorna um vertice aleatório do grafo.
+	"""
 	def um_vertice(self):
 		v = self.vertices.pop()
 		self.vertices.add(v)
 		return v
 
+	"""
+	Adjacentes
+	recebe como parametro um vertice e retorna um conjunto de vertices
+	adjacentes a ele.
+	"""
 	def adjacentes(self, vertice):
 		return vertice.adjacentes()
 
+	"""
+	Grau
+	recebe como parametro um vertice e retorna o grau desse vertice
+	"""
 	def grau(self, vertice):
 		return vertice.grau()
 
+	"""
+	Ordenacao topologica
+	retorna a ordenacao topologica do grafo.
+	"""
 	def ordenacao_topologica(self):
 		s = self.sumidouros()
 		l = []
@@ -59,6 +107,11 @@ class Grafo():
 
 		return l
 
+	"""
+	Planejamento
+	distribui os vertices(disciplinas) em semetres e retorna uma lista de 
+	semestres. carga horaria semestral = 30 horas.
+	"""
 	def planejamento(self):
 		carga_horaria_semestre = 30
 		plano = []
@@ -76,10 +129,18 @@ class Grafo():
 			carga_horaria_semestre = 30
 		return plano	
 
+	"""
+	Limpa vertices
+	percorre o conjunto de vertices marcando visitado como falso.
+	"""
 	def limpa_vertices(self):
 		for v in self.vertices:
 			v.visitado = False
 
+	"""
+	Sumidouros
+	retorna um conjunto de vertices sumidouros.
+	"""
 	def sumidouros(self):
 		s = set()
 		for v in self.vertices:
@@ -87,6 +148,10 @@ class Grafo():
 				s.add(v)
 		return s
 
+	"""
+	Fontes
+	retorna um conjunto de vertices fontes.
+	"""
 	def fontes(self):
 		s = set()
 		for v in self.vertices:
@@ -94,6 +159,11 @@ class Grafo():
 				s.add(v)
 		return s
 
+	"""
+	Existe materias cursaveis
+	percorre o conjunto de vertices e retorna True se houver algum vertice
+	(disciplina) que nao foi cursada
+	"""
 	def existe_materias_cursaveis(self):
 		for v in self.vertices:
 			if not v.cursada:
@@ -102,6 +172,15 @@ class Grafo():
 
 class Vertice():
 	
+	"""
+	Construtor
+	cria um objeto vertice.
+	parametros obrigatorios: rotulo -> nome
+	parametros nao obrigatorios: carga_horaria -> carga horaria da disciplina
+								 cursada - > boolean que indica se a materia ja
+								 			 foi cursada.
+	cria um conjunto de vertices sucessores e antecessores originalmente vazios.
+	"""
 	def __init__(self, rotulo, carga_horaria=None, cursada=False):
 		self.rotulo = rotulo
 		self.antecessores = set()
@@ -110,33 +189,74 @@ class Vertice():
 		self.carga_horaria = carga_horaria
 		self.cursada = cursada
 
+	"""
+	Adiciona antecessor
+	recebe um vertice como parametro e o adiciona no conjunto de vertices
+	antecessores.
+	"""
 	def adiciona_antecessor(self, vertice):
 		self.antecessores.add(vertice)
 
+	"""
+	Adiciona sucessor
+	recebe um vertice como parametro e o adiciona no conjunto de vertices
+	sucessores.
+	"""
 	def adiciona_sucessor(self, vertice):
 		self.sucessores.add(vertice)
 
+	"""
+	Remove antecessor
+	recebe um vertice como parametro e o remove do conjunto de vertices
+	antecessores.
+	"""
 	def remove_antecessor(self, vertice):
 		self.antecessores.remove(vertice)
 
+	"""
+	Remove sucessor
+	recebe um vertice como parametro e o remove do conjunto de vertices
+	sucessores.
+	"""
 	def remove_sucessor(self, vertice):
 		self.sucessores.remove(vertice)
 
+	"""
+	Adjacentes
+	retorna a uniao do conjunto de vertices antecessores e sucessores.
+	"""
 	def adjacentes(self):
 		return self.antecessores | self.sucessores
 
+	"""
+	Grau
+	retorna o grau do vertice
+	"""
 	def grau(self):
 		return len(self.adjacentes())
 
+	"""
+	Pode ser cursada
+	percorre o conjunto de vertices antecessores e retorna true se todos eles ja
+	foram cursados
+	"""
 	def pode_ser_cursada(self):
 		for v in self.antecessores:
 			if not v.cursada:
 				return False
 		return True
 
+	"""
+	String
+	é chamado toda a vez que é feito str() com o objeto
+	"""
 	def __str__(self):
 		return self.rotulo
 
+	"""
+	Repr
+	é chamado toda a vez que é feito print() com o objeto
+	"""
 	def __repr__(self):
 		return self.__str__()
 
@@ -302,6 +422,9 @@ def main():
 
 	g.conecta(v35,v40)
 
+	print("ORDENAÇÂO TOPOLOGICA: ")
+	print(g.ordenacao_topologica())
+	print("PLANEJAMENTO: ")
 	print(g.planejamento())
 
 if __name__ == "__main__":
